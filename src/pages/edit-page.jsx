@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { validator } from '../utils/validator';
 import InputField from '../components/input-field';
 
@@ -13,22 +13,40 @@ const EditPage = () => {
   });
   const [errors, setErrors] = useState({});
 
+  useEffect(() => {
+    const data = localStorage.getItem('student');
+    if (data) {
+      setData(JSON.parse(data));
+    }
+  }, []);
+
+  const isDataInStorage = !!localStorage.getItem('student');
+
   const validatorConfig = {
     firstName: {
       isRequired: { message: 'First name is required' },
-      min: {message: 'First name cannot be shorter than 3 characters', value: 3}
+      min: {
+        message: 'First name cannot be shorter than 3 characters',
+        value: 3,
+      },
     },
     lastName: {
       isRequired: { message: 'Last name is required' },
-      min: {message: 'Last name cannot be shorter than 3 characters', value: 3}
+      min: {
+        message: 'Last name cannot be shorter than 3 characters',
+        value: 3,
+      },
     },
     yearOfBirth: {
       isRequired: { message: 'Year of Birth is required' },
-      isCorrectYear: {message: 'Year of birth was entered incorrectly', startValue: 1935}
+      isCorrectYear: {
+        message: 'Year of birth was entered incorrectly',
+        startValue: 1935,
+      },
     },
     portfolio: {
       isRequired: { message: 'Portfolio is required' },
-      isLink: {message: 'Portfolio must be a link'}
+      isLink: { message: 'Portfolio must be a link' },
     },
   };
 
@@ -62,8 +80,10 @@ const EditPage = () => {
     <div className="container">
       <div className="row mt-5">
         <div className="col-md-6 offset-md-3 p-5 shadow">
-          <form onSubmit={handleSubmit}>
-            <h1 className="text-center">Create Card</h1>
+          <form className="d-flex flex-column" onSubmit={handleSubmit}>
+            <h1 className="text-center">
+              {isDataInStorage ? 'Edit' : 'Create'} Card
+            </h1>
             <InputField
               label="First Name"
               name="firstName"
@@ -95,13 +115,18 @@ const EditPage = () => {
               onChange={handleChange}
               error={errors.portfolio}
             />
-            <button
-              onClick={() => history.goBack()}
-              className="btn btn-primary"
-              disabled={!isValid}
-            >
-              Create
-            </button>
+            <div className="btn-group mt-3">
+              <Link className="btn btn-secondary" to="/">
+                Home
+              </Link>
+              <button
+                onClick={() => history.goBack()}
+                className="btn btn-primary"
+                disabled={!isValid}
+              >
+                {isDataInStorage ? 'Edit' : 'Create'}
+              </button>
+            </div>
           </form>
         </div>
       </div>
