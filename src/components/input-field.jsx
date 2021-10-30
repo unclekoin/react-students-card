@@ -1,6 +1,6 @@
 import React from 'react';
 
-const InputField = ({ label, name, type = 'text', value, onChange }) => {
+const InputField = ({ label, name, type = 'text', value, error, onChange, max, min }) => {
   return (
     <div className="mb-3">
       <label className="form-label" htmlFor={name}>
@@ -8,13 +8,15 @@ const InputField = ({ label, name, type = 'text', value, onChange }) => {
       </label>
       <div className="input-group has-validation">
         <input
-          className="form-control is-invalid"
+          className={`form-control is-${error ? 'invalid' : 'valid'}`}
           type={type}
           name={name}
           value={value}
           onChange={onChange}
+          min={min}
+          max={max}
         />
-        <div className="invalid-feedback">Field must be filled in</div>
+        {error && <div className="invalid-feedback">{error}</div>}
       </div>
     </div>
   );
